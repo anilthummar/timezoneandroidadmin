@@ -1,0 +1,75 @@
+private String getCurrentDate() {
+
+        TimeZone tz = TimeZone.getTimeZone(SessionManager.getTimezone(context));
+        String date = "";
+        try {
+
+            Date c = Calendar.getInstance(tz).getTime();
+            final SimpleDateFormat df = new SimpleDateFormat(SessionManager.getDateFormat(context).
+                    replace("mm", "MM"), Locale.getDefault());
+            df.setTimeZone(TimeZone.getTimeZone(SessionManager.getTimezone(context)));
+
+            date = df.format(c);
+            LogM.LogI("datedatedate---->>" + date);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+	
+	
+	
+	private String getCurrentTime(String timeend) {
+
+        String am_pm = "";
+        String date = "";
+        TimeZone tz = TimeZone.getTimeZone(SessionManager.getTimezone(context));
+        Calendar mcurrentTime = Calendar.getInstance(tz);
+
+
+        try {
+            if (SessionManager.getHour_Formate(context).equals("12")) {
+                mcurrentTime.set(Calendar.HOUR, mcurrentTime.get(Calendar.HOUR));
+            } else {
+                mcurrentTime.set(Calendar.HOUR_OF_DAY, mcurrentTime.get(Calendar.HOUR_OF_DAY));
+            }
+            mcurrentTime.set(Calendar.MINUTE, mcurrentTime.get(Calendar.MINUTE));
+            mcurrentTime.set(Calendar.SECOND, mcurrentTime.get(Calendar.SECOND));
+
+            int hours;
+            if (SessionManager.getHour_Formate(context).equals("12")) {
+                hours = mcurrentTime.get(Calendar.HOUR);
+            } else {
+                hours = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+            }
+
+
+            Calendar datetime = Calendar.getInstance(tz);
+
+            if (datetime.get(Calendar.AM_PM) == Calendar.AM)
+                am_pm = "AM";
+            else if (datetime.get(Calendar.AM_PM) == Calendar.PM)
+                am_pm = "PM";
+
+            LogM.LogI("am_pm----am_pm" + am_pm);
+
+            if (timeend.equals("endtime")) {
+                mcurrentTime.add(Calendar.MINUTE, 5);
+                LogM.LogI("time----hours" + hours);
+                if (SessionManager.getHour_Formate(context).equals("12")) {
+
+                    date = String.format("%02d", hours) + ":" +
+                            String.format("%02d", mcurrentTime.get(Calendar.MINUTE)) + " " + am_pm;
+                }
+            } else {
+
+                date = String.format("%02d", hours) + ":" +
+                        String.format("%02d", mcurrentTime.get(Calendar.MINUTE)) + " " + am_pm;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        return date;
+    }
